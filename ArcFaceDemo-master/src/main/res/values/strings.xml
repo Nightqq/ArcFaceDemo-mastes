@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">sdk_demo</string>
+    <string name="title_activity_sener_manger">SenerMangerActivity</string>
+</resources>

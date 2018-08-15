@@ -1,19 +1,15 @@
-package com.arcsoft.sdk_demo.utils;
+package com.arcsoft.sdk_demo.utils.Utils;
 
 import android.content.Intent;
 import android.util.Log;
 
-import com.arcsoft.sdk_demo.TCPUpDataActivity;
+import com.arcsoft.sdk_demo.utils.Activity.TCPUpDataActivity;
 
 import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
-import java.net.Inet4Address;
-import java.net.InetAddress;
-import java.net.InetSocketAddress;
 import java.net.Socket;
-import java.net.SocketAddress;
 
 /**
  * Created by Administrator on 2018/4/17.

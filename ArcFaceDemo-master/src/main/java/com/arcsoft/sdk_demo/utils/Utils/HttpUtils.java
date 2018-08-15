@@ -1,4 +1,4 @@
-package com.arcsoft.sdk_demo;
+package com.arcsoft.sdk_demo.utils.Utils;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -9,14 +9,13 @@ import android.util.JsonReader;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.alibaba.fastjson.JSON;
 import com.arcsoft.facerecognition.AFR_FSDKFace;
+import com.arcsoft.sdk_demo.utils.Activity.Application;
 import com.arcsoft.sdk_demo.utils.bean.FaceFeatureData;
 import com.arcsoft.sdk_demo.utils.bean.upBean;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
-import org.ksoap2.serialization.PropertyInfo;
 import org.ksoap2.serialization.SoapObject;
 import org.ksoap2.serialization.SoapSerializationEnvelope;
 import org.ksoap2.transport.HttpTransportSE;
@@ -25,9 +24,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.StringReader;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.Cache;
@@ -40,7 +37,7 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 import okhttp3.logging.HttpLoggingInterceptor;
 
-import static com.arcsoft.sdk_demo.Application.mFaceDB;
+import static com.arcsoft.sdk_demo.utils.Activity.Application.mFaceDB;
 
 /**
  * Created by Administrator on 2018/6/28.

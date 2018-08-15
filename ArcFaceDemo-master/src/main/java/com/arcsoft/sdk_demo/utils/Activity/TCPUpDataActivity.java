@@ -1,4 +1,4 @@
-package com.arcsoft.sdk_demo;
+package com.arcsoft.sdk_demo.utils.Activity;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -16,7 +16,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.arcsoft.facerecognition.AFR_FSDKFace;
-import com.arcsoft.sdk_demo.utils.TCPClient;
+import com.arcsoft.sdk_demo.R;
+import com.arcsoft.sdk_demo.utils.Utils.TCPClient;
 
 import java.lang.ref.WeakReference;
 import java.util.concurrent.ExecutorService;

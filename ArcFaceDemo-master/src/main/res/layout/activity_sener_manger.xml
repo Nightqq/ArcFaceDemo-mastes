@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.arcsoft.sdk_demo.SenerMangerActivity">
+    tools:context="com.arcsoft.sdk_demo.utils.Activity.SenerMangerActivity">
     <TextView
         android:layout_marginTop="10dp"
         android:layout_marginLeft="10dp"

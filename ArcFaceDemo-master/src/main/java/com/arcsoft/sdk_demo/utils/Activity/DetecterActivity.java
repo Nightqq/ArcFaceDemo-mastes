@@ -1,4 +1,4 @@
-package com.arcsoft.sdk_demo;
+package com.arcsoft.sdk_demo.utils.Activity;
 
 import android.app.Activity;
 import android.graphics.Bitmap;
@@ -35,6 +35,7 @@ import com.arcsoft.genderestimation.ASGE_FSDKError;
 import com.arcsoft.genderestimation.ASGE_FSDKFace;
 import com.arcsoft.genderestimation.ASGE_FSDKGender;
 import com.arcsoft.genderestimation.ASGE_FSDKVersion;
+import com.arcsoft.sdk_demo.R;
 import com.guo.android_extend.java.AbsLoop;
 import com.guo.android_extend.java.ExtByteArrayOutputStream;
 import com.guo.android_extend.tools.CameraHelper;
@@ -94,7 +95,7 @@ public class DetecterActivity extends Activity implements OnCameraListener, View
 		AFR_FSDKEngine engine = new AFR_FSDKEngine();
 		AFR_FSDKFace result = new AFR_FSDKFace();
 
-		List<FaceDB.FaceRegist> mResgist = ((Application)DetecterActivity.this.getApplicationContext()).mFaceDB.mRegister;
+		List<FaceDB.FaceRegist> mResgist = ((Application) DetecterActivity.this.getApplicationContext()).mFaceDB.mRegister;
 		List<ASAE_FSDKFace> face1 = new ArrayList<>();
 		List<ASGE_FSDKFace> face2 = new ArrayList<>();
 		

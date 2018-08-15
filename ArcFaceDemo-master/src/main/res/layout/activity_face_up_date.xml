@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.arcsoft.sdk_demo.UDPUpDateActivity"
+    tools:context="com.arcsoft.sdk_demo.utils.Activity.UDPUpDateActivity"
     android:orientation="vertical">
     <LinearLayout
         android:layout_width="match_parent"

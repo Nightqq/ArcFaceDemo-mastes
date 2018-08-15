@@ -1,4 +1,4 @@
-package com.arcsoft.sdk_demo;
+package com.arcsoft.sdk_demo.utils.Activity;
 
 import android.app.Activity;
 import android.content.BroadcastReceiver;
@@ -15,7 +15,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.arcsoft.facerecognition.AFR_FSDKFace;
-import com.arcsoft.sdk_demo.utils.UDPClient;
+import com.arcsoft.sdk_demo.R;
+import com.arcsoft.sdk_demo.utils.Utils.UDPClient;
 
 import java.lang.ref.WeakReference;
 import java.util.Arrays;

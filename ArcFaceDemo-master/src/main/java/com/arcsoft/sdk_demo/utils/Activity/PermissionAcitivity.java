@@ -1,4 +1,4 @@
-package com.arcsoft.sdk_demo;
+package com.arcsoft.sdk_demo.utils.Activity;
 
 import android.Manifest;
 import android.app.Activity;

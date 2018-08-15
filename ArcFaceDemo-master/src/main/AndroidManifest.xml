@@ -10,27 +10,27 @@
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
-        android:name=".Application"
+        android:name=".utils.Activity.Application"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".PermissionAcitivity">
+        <activity android:name=".utils.Activity.PermissionAcitivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".RegisterActivity" />
+        <activity android:name=".utils.Activity.RegisterActivity" />
         <activity android:name=".DetecterActivity" />
-        <activity android:name=".MainActivity" />
-        <activity android:name=".FaceDBActivity" />
+        <activity android:name=".utils.Activity.MainActivity" />
+        <activity android:name=".utils.Activity.FaceDBActivity" />
         <activity
-            android:name=".SenerMangerActivity"
+            android:name=".utils.Activity.SenerMangerActivity"
             android:label="@string/title_activity_sener_manger" />
-        <activity android:name=".UDPUpDateActivity"></activity>
-        <activity android:name=".TCPUpDataActivity"></activity>
+        <activity android:name=".utils.Activity.UDPUpDateActivity"></activity>
+        <activity android:name=".utils.Activity.TCPUpDataActivity"></activity>
     </application>
 
 </manifest>

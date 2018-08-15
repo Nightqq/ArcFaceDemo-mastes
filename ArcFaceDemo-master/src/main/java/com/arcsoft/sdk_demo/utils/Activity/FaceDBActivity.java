@@ -1,11 +1,9 @@
-package com.arcsoft.sdk_demo;
+package com.arcsoft.sdk_demo.utils.Activity;
 
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -15,7 +13,7 @@ import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
-import com.arcsoft.facerecognition.AFR_FSDKFace;
+import com.arcsoft.sdk_demo.R;
 import com.guo.android_extend.widget.ExtImageView;
 import com.guo.android_extend.widget.HListView;
 

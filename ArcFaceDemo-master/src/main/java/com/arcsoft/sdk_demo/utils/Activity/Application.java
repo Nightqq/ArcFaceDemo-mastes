@@ -1,4 +1,4 @@
-package com.arcsoft.sdk_demo;
+package com.arcsoft.sdk_demo.utils.Activity;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -7,9 +7,6 @@ import android.graphics.Matrix;
 import android.media.ExifInterface;
 import android.net.Uri;
 import android.util.Log;
-
-import java.util.Timer;
-import java.util.TimerTask;
 
 /**
  * Created by gqj3375 on 2017/4/28.

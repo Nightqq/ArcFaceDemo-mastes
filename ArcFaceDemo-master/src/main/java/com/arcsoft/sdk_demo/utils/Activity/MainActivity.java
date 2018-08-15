@@ -1,4 +1,4 @@
-package com.arcsoft.sdk_demo;
+package com.arcsoft.sdk_demo.utils.Activity;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -19,6 +19,9 @@ import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Toast;
+
+import com.arcsoft.sdk_demo.utils.Utils.HttpUtils;
+import com.arcsoft.sdk_demo.R;
 
 public class MainActivity extends Activity implements OnClickListener {
 	private final String TAG = this.getClass().toString();

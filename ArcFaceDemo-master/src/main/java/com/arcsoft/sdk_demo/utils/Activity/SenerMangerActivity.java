@@ -1,4 +1,4 @@
-package com.arcsoft.sdk_demo;
+package com.arcsoft.sdk_demo.utils.Activity;
 
 import android.content.Context;
 import android.hardware.Sensor;
@@ -9,6 +9,8 @@ import android.os.Bundle;
 import android.app.Activity;
 import android.view.View;
 import android.widget.TextView;
+
+import com.arcsoft.sdk_demo.R;
 
 public class SenerMangerActivity extends Activity implements SensorEventListener{
 

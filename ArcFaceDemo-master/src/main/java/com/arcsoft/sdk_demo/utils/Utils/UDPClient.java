@@ -1,9 +1,9 @@
-package com.arcsoft.sdk_demo.utils;
+package com.arcsoft.sdk_demo.utils.Utils;
 
 import android.content.Intent;
 import android.util.Log;
 
-import com.arcsoft.sdk_demo.UDPUpDateActivity;
+import com.arcsoft.sdk_demo.utils.Activity.UDPUpDateActivity;
 
 import java.io.IOException;
 import java.net.DatagramPacket;

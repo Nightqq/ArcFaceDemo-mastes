@@ -1,7 +1,9 @@
-package com.arcsoft.sdk_demo;
+package com.arcsoft.sdk_demo.utils.Activity;
 
 import android.app.Activity;
 import android.os.Bundle;
+
+import com.arcsoft.sdk_demo.R;
 
 /**
  * 自定义相机类

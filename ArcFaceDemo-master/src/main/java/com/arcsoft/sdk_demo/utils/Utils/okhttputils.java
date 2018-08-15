@@ -1,4 +1,4 @@
-package com.arcsoft.sdk_demo.utils;
+package com.arcsoft.sdk_demo.utils.Utils;
 
 import okhttp3.OkHttpClient;
 import okhttp3.Request;

@@ -4,6 +4,8 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
+import android.os.Build;
+import android.support.annotation.RequiresApi;
 import android.util.Base64;
 import android.util.JsonReader;
 import android.util.Log;
@@ -12,7 +14,9 @@ import android.widget.Toast;
 import com.arcsoft.facerecognition.AFR_FSDKFace;
 import com.arcsoft.sdk_demo.utils.Activity.Application;
 import com.arcsoft.sdk_demo.utils.bean.FaceFeatureData;
+import com.arcsoft.sdk_demo.utils.bean.PrisonerInfo;
 import com.arcsoft.sdk_demo.utils.bean.upBean;
+import com.arcsoft.sdk_demo.utils.helper.PrisonerInfoHelp;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -42,7 +46,7 @@ import static com.arcsoft.sdk_demo.utils.Activity.Application.mFaceDB;
 /**
  * Created by Administrator on 2018/6/28.
  */
-
+@RequiresApi(api = Build.VERSION_CODES.HONEYCOMB)
 public class HttpUtils {
 
 
@@ -166,7 +170,6 @@ public class HttpUtils {
 
         @Override
         protected String doInBackground(String... params) {
-            // 查询手机号码（段）信息*/
             try {
                 result = getRemoteInfo(isUpData,context,file);
             } catch (Exception e) {
@@ -175,6 +178,7 @@ public class HttpUtils {
             //将结果返回给onPostExecute方法
             return result;
         }
+
 
         @Override
         //此方法可以在主线程改变UI
@@ -189,23 +193,41 @@ public class HttpUtils {
                 }
                 List<FaceFeatureData> faceFeatureData = gson.fromJson(result, new TypeToken<List<FaceFeatureData>>() {
                 }.getType());
+                for (FaceFeatureData faceFeatureDatum : faceFeatureData) {
+                    Log.e("1111",faceFeatureDatum.toString());
+                }
                 if (faceFeatureData != null) {
-                    for (FaceFeatureData f : faceFeatureData
-                            ) {
-                        byte[] bytes = base64String2ByteFun(f.getFeaturedata());
-                        featuredata = f.getFeaturedata();
-                        Log.i("1111返回的bytes", bytes.length + "");
-                        AFR_FSDKFace afr_fsdkFace = new AFR_FSDKFace();
-                        afr_fsdkFace.setFeatureData(bytes);
-                        mFaceDB.addFace(f.getEmp_name(), afr_fsdkFace);
+                    for (FaceFeatureData f : faceFeatureData) {
+                        saveDB(f);
                     }
                 }
+                Toast.makeText(context, "数据下载完成", Toast.LENGTH_SHORT).show();
             } else {
                 if (result != null) {
                     Toast.makeText(context,result,Toast.LENGTH_SHORT).show();
                     Log.i("返回数据4", result);
                 }
             }
+        }
+        private void saveDB(FaceFeatureData f) {
+            //存储数据到本地
+            PrisonerInfo prisonerInfo = new PrisonerInfo();
+            prisonerInfo.setId(new Long(f.getCrime_id()));
+            prisonerInfo.setCrime_id(f.getCrime_id());
+            prisonerInfo.setCrime_jianqu(f.getCrime_jianqu());
+            prisonerInfo.setCrime_name(f.getCrime_name());
+            prisonerInfo.setCrime_xb(f.getCrime_xb());
+            prisonerInfo.setCrime_featuredata("见人脸库");
+            PrisonerInfoHelp.savePrisonerInfoToDB(prisonerInfo);
+            //存储特征值到人脸库
+            byte[] bytes = base64String2ByteFun(f.getCrime_featuredata());
+            featuredata = f.getCrime_featuredata();
+            Log.i("1111返回的bytes", bytes.length + "");
+            AFR_FSDKFace afr_fsdkFace = new AFR_FSDKFace();
+            afr_fsdkFace.setFeatureData(bytes);
+            mFaceDB.addFace(f.getCrime_name(), afr_fsdkFace);
+
+
         }
     }
 

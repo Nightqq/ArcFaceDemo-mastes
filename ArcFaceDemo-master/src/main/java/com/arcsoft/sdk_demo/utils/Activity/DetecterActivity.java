@@ -36,6 +36,9 @@ import com.arcsoft.genderestimation.ASGE_FSDKFace;
 import com.arcsoft.genderestimation.ASGE_FSDKGender;
 import com.arcsoft.genderestimation.ASGE_FSDKVersion;
 import com.arcsoft.sdk_demo.R;
+import com.arcsoft.sdk_demo.utils.Utils.AudioPlayUtils;
+import com.arcsoft.sdk_demo.utils.bean.PrisonerInfo;
+import com.arcsoft.sdk_demo.utils.helper.PrisonerInfoHelp;
 import com.guo.android_extend.java.AbsLoop;
 import com.guo.android_extend.java.ExtByteArrayOutputStream;
 import com.guo.android_extend.tools.CameraHelper;
@@ -54,12 +57,10 @@ import java.util.List;
 
 public class DetecterActivity extends Activity implements OnCameraListener, View.OnTouchListener, Camera.AutoFocusCallback {
 	private final String TAG = this.getClass().getSimpleName();
-
 	private int mWidth, mHeight, mFormat;
 	private CameraSurfaceView mSurfaceView;
 	private CameraGLSurfaceView mGLSurfaceView;
 	private Camera mCamera;
-
 	AFT_FSDKVersion version = new AFT_FSDKVersion();
 	AFT_FSDKEngine engine = new AFT_FSDKEngine();
 	ASAE_FSDKVersion mAgeVersion = new ASAE_FSDKVersion();
@@ -69,7 +70,6 @@ public class DetecterActivity extends Activity implements OnCameraListener, View
 	List<AFT_FSDKFace> result = new ArrayList<>();
 	List<ASAE_FSDKAge> ages = new ArrayList<>();
 	List<ASGE_FSDKGender> genders = new ArrayList<>();
-
 	int mCameraID;
 	int mCameraRotate;
 	boolean mCameraMirror;
@@ -77,8 +77,6 @@ public class DetecterActivity extends Activity implements OnCameraListener, View
 	FRAbsLoop mFRAbsLoop = null;
 	AFT_FSDKFace mAFT_FSDKFace = null;
 	Handler mHandler;
-
-
 	Runnable hide = new Runnable() {
 		@Override
 		public void run() {
@@ -88,18 +86,17 @@ public class DetecterActivity extends Activity implements OnCameraListener, View
 	};
 
 	class FRAbsLoop extends AbsLoop {
-
 		AFR_FSDKVersion version = new AFR_FSDKVersion();
 		//ASAE_FSDKEngine asae_fsdkEngine = new ASAE_FSDKEngine();
 		//ASGE_FSDKEngine asge_fsdkEngine = new ASGE_FSDKEngine();
 		AFR_FSDKEngine engine = new AFR_FSDKEngine();
 		AFR_FSDKFace result = new AFR_FSDKFace();
-
 		List<FaceDB.FaceRegist> mResgist = ((Application) DetecterActivity.this.getApplicationContext()).mFaceDB.mRegister;
 		List<ASAE_FSDKFace> face1 = new ArrayList<>();
 		List<ASGE_FSDKFace> face2 = new ArrayList<>();
-		
-		@Override
+        private AudioPlayUtils audioPlayUtils;
+
+        @Override
 		public void setup() {
 			AFR_FSDKError error = engine.AFR_FSDK_InitialEngine(FaceDB.appid, FaceDB.fr_key);
 			Log.d(TAG, "AFR_FSDK_InitialEngine = " + error.getCode());
@@ -115,12 +112,9 @@ public class DetecterActivity extends Activity implements OnCameraListener, View
 				Log.d(TAG, "AFR_FSDK_ExtractFRFeature cost :" + (System.currentTimeMillis() - time) + "ms");
 				Log.d(TAG, "Face=" + result.getFeatureData()[0] + "," + result.getFeatureData()[1] + "," + result.getFeatureData()[2] + "," + error.getCode());
 				AFR_FSDKMatching score = new AFR_FSDKMatching();
-
-
 				//ASGE_FSDKError asge_fsdkError = asge_fsdkEngine.ASGE_FSDK_GenderEstimation_Image(mImageNV21, mWidth, mHeight, AFR_FSDKEngine.CP_PAF_NV21, face2, genders);
 				//ASAE_FSDKError asae_fsdkError = asae_fsdkEngine.ASAE_FSDK_AgeEstimation_Image(mImageNV21, mWidth, mHeight, AFR_FSDKEngine.CP_PAF_NV21, face1, ages);
 				//Log.d(TAG, "111111111111111"+asae_fsdkError.getCode()+"2222222222222222"+asge_fsdkError.getCode());
-
 				float max = 0.0f;
 				int flag = 0;
 				String name = null;
@@ -155,7 +149,6 @@ public class DetecterActivity extends Activity implements OnCameraListener, View
 				//Log.d(TAG, "age:" + ages.get(0).getAge() + ",gender:" + genders.get(0).getGender());
 				//final String age = ages.get(0).getAge() == 0 ? "年龄未知" : ages.get(0).getAge() + "岁";
 				//final String gender = genders.get(0).getGender() == -1 ? "性别未知" : (genders.get(0).getGender() == 0 ? "男" : "女");
-				
 				//crop
 				byte[] data = mImageNV21;
 				YuvImage yuv = new YuvImage(data, ImageFormat.NV21, mWidth, mHeight, null);
@@ -167,9 +160,10 @@ public class DetecterActivity extends Activity implements OnCameraListener, View
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
-
 				if (max > 0.6f) {
-					//fr success.
+					//点名成功，语音提示
+					audioPlayUtils = new AudioPlayUtils(DetecterActivity.this, R.raw.call_success);
+                    //fr success.
 					final float max_score = max;
 					Log.d(TAG, "fit Score:" + max + ", NAME:" + name);
 					final String mNameShow = name;
@@ -177,7 +171,6 @@ public class DetecterActivity extends Activity implements OnCameraListener, View
 					mHandler.post(new Runnable() {
 						@Override
 						public void run() {
-
 							mTextView.setAlpha(1.0f);
 							mTextView.setText(mNameShow);
 							mTextView.setTextColor(Color.RED);
@@ -193,6 +186,11 @@ public class DetecterActivity extends Activity implements OnCameraListener, View
 						}
 					});
 				} else {
+					//未识别语音提示
+					if (audioPlayUtils==null||!audioPlayUtils.isPlaying()){
+						audioPlayUtils=new AudioPlayUtils(DetecterActivity.this,R.raw.call_failure);
+						audioPlayUtils.play();
+					}
 					final String mNameShow = "未识别";
 					DetecterActivity.this.runOnUiThread(new Runnable() {
 						@Override
@@ -216,7 +214,6 @@ public class DetecterActivity extends Activity implements OnCameraListener, View
 			}
 
 		}
-
 		//线程结束，关闭引擎
 		@Override
 		public void over() {
@@ -228,7 +225,7 @@ public class DetecterActivity extends Activity implements OnCameraListener, View
 	private TextView mTextView;
 	private TextView mTextView1;
 	private ImageView mImageView;
-
+	private TextView rolltitle;
 	/* (non-Javadoc)
 	 * @see android.app.Activity#onCreate(android.os.Bundle)
 	 */
@@ -236,7 +233,6 @@ public class DetecterActivity extends Activity implements OnCameraListener, View
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
-
 		mCameraID = getIntent().getIntExtra("Camera", 0) == 0 ? Camera.CameraInfo.CAMERA_FACING_BACK : Camera.CameraInfo.CAMERA_FACING_FRONT;
 		mCameraRotate = getIntent().getIntExtra("Camera", 0) == 0 ? 90 : 270;
 		mCameraMirror = getIntent().getIntExtra("Camera", 0) == 0 ? false : true;
@@ -244,8 +240,8 @@ public class DetecterActivity extends Activity implements OnCameraListener, View
 		mHeight = 960;
 		mFormat = ImageFormat.NV21;
 		mHandler = new Handler();
-
 		setContentView(R.layout.activity_camera);
+		new AudioPlayUtils(this,R.raw.start_call).play();
 		mGLSurfaceView = (CameraGLSurfaceView) findViewById(R.id.glsurfaceView);
 		mGLSurfaceView.setOnTouchListener(this);
 		mSurfaceView = (CameraSurfaceView) findViewById(R.id.surfaceView);
@@ -259,6 +255,7 @@ public class DetecterActivity extends Activity implements OnCameraListener, View
 		mTextView1 = (TextView) findViewById(R.id.textView1);
 		mTextView1.setText("");
 
+		rolltitle=(TextView)findViewById(R.id.roll_title);
 		mImageView = (ImageView) findViewById(R.id.imageView);
 
 		AFT_FSDKError err = engine.AFT_FSDK_InitialFaceEngine(FaceDB.appid, FaceDB.ft_key, AFT_FSDKEngine.AFT_OPF_0_HIGHER_EXT, 16, 5);
@@ -278,6 +275,19 @@ public class DetecterActivity extends Activity implements OnCameraListener, View
 
 		mFRAbsLoop = new FRAbsLoop();
 		mFRAbsLoop.start();
+	}
+
+	private String crime_name="";
+	@Override
+	protected void onStart() {
+		super.onStart();
+		List<PrisonerInfo> prisonerInfoToDB = PrisonerInfoHelp.getPrisonerInfoToDB();
+		if (prisonerInfoToDB!=null&&prisonerInfoToDB.size()>0){
+			for (PrisonerInfo prisonerInfo : prisonerInfoToDB) {
+				crime_name= crime_name+prisonerInfo.getCrime_name()+"、";
+			}
+			rolltitle.setText("未点名人员"+prisonerInfoToDB.size()+":"+crime_name);
+		}
 	}
 
 	/* (non-Javadoc)

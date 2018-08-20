@@ -15,10 +15,23 @@ public class FaceFeatureData {
      */
 
     private int id;
-    private String emp_id;
-    private String emp_name;
-    private String emp_jhao;
-    private String featuredata;
+    private String crime_id;
+    private String crime_name;
+    private String crime_jianqu;
+    private String crime_xb;
+    private String crime_featuredata;
+
+    @Override
+    public String toString() {
+        return "FaceFeatureData{" +
+                "id=" + id +
+                ", crime_id='" + crime_id + '\'' +
+                ", crime_name='" + crime_name + '\'' +
+                ", crime_jianqu='" + crime_jianqu + '\'' +
+                ", crime_xb='" + crime_xb + '\'' +
+                ", crime_featuredata='" + crime_featuredata + '\'' +
+                '}';
+    }
 
     public int getId() {
         return id;
@@ -28,35 +41,43 @@ public class FaceFeatureData {
         this.id = id;
     }
 
-    public String getEmp_id() {
-        return emp_id;
+    public String getCrime_id() {
+        return crime_id;
     }
 
-    public void setEmp_id(String emp_id) {
-        this.emp_id = emp_id;
+    public void setCrime_id(String crime_id) {
+        this.crime_id = crime_id;
     }
 
-    public String getEmp_name() {
-        return emp_name;
+    public String getCrime_name() {
+        return crime_name;
     }
 
-    public void setEmp_name(String emp_name) {
-        this.emp_name = emp_name;
+    public void setCrime_name(String crime_name) {
+        this.crime_name = crime_name;
     }
 
-    public String getEmp_jhao() {
-        return emp_jhao;
+    public String getCrime_jianqu() {
+        return crime_jianqu;
     }
 
-    public void setEmp_jhao(String emp_jhao) {
-        this.emp_jhao = emp_jhao;
+    public void setCrime_jianqu(String crime_jianqu) {
+        this.crime_jianqu = crime_jianqu;
     }
 
-    public String getFeaturedata() {
-        return featuredata;
+    public String getCrime_xb() {
+        return crime_xb;
     }
 
-    public void setFeaturedata(String featuredata) {
-        this.featuredata = featuredata;
+    public void setCrime_xb(String crime_xb) {
+        this.crime_xb = crime_xb;
+    }
+
+    public String getCrime_featuredata() {
+        return crime_featuredata;
+    }
+
+    public void setCrime_featuredata(String crime_featuredata) {
+        this.crime_featuredata = crime_featuredata;
     }
 }

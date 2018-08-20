@@ -23,7 +23,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".utils.Activity.RegisterActivity" />
-        <activity android:name=".DetecterActivity" />
+        <activity android:name=".utils.Activity.DetecterActivity"/>
         <activity android:name=".utils.Activity.MainActivity" />
         <activity android:name=".utils.Activity.FaceDBActivity" />
         <activity

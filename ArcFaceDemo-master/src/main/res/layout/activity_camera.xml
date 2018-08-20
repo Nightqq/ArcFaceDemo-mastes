@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
+    android:keepScreenOn="true"
     android:layout_height="match_parent" >
 
     <com.guo.android_extend.widget.CameraSurfaceView
@@ -12,14 +13,77 @@
         android:id="@+id/glsurfaceView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_centerInParent="true"/>
+        android:layout_centerInParent="true"
+        android:layout_alignParentBottom="true"/>
+    <LinearLayout
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="40dp">
+        <TextView
+            android:textSize="24sp"
+            android:text="总人数:"
+            android:textColor="#000"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <TextView
+            android:textSize="24sp"
+            android:text="12"
+            android:textColor="#000"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <TextView
+            android:layout_marginLeft="20dp"
+            android:textSize="24sp"
+            android:text="已点名:"
+            android:textColor="#000"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <TextView
+            android:textSize="24sp"
+            android:text="7"
+            android:textColor="#000"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <TextView
+            android:layout_marginLeft="20dp"
+            android:textSize="24sp"
+            android:text="未点名:"
+            android:textColor="#ff0000"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <TextView
+            android:textSize="24sp"
+            android:text="5"
+            android:textColor="#f00"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
+
+    <TextView
+        android:gravity="center"
+        android:id="@+id/roll_title"
+        android:text="未点名人员：赵云、张飞、关羽、刘备、诸葛亮。"
+        android:textColor="#f00"
+        android:textSize="24sp"
+        android:layout_marginTop="40dp"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:singleLine="true"
+        android:ellipsize="marquee"
+        android:marqueeRepeatLimit="marquee_forever"
+        android:focusable="true"
+        android:scrollHorizontally="true"
+        android:focusableInTouchMode="true"
+         />
 
     <ImageView
         android:id="@+id/imageView"
         android:layout_width="120dp"
         android:layout_height="120dp"
         android:layout_marginLeft="10dp"
-        android:layout_marginTop="10dp"/>
+        android:layout_marginTop="111dp"/>
 
     <TextView
         android:id="@+id/textView"

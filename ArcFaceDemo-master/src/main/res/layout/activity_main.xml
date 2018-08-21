@@ -12,22 +12,7 @@
         android:layout_weight="1"
         android:orientation="horizontal">
 
-        <RelativeLayout
-            android:visibility="gone"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:gravity="center">
 
-            <TextView
-                android:id="@+id/main_face_entry"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:drawableTop="@mipmap/ic_launcher"
-                android:gravity="center_horizontal"
-                android:text="人脸录入"
-                android:textColor="#000" />
-        </RelativeLayout>
 
         <RelativeLayout
             android:layout_width="0dp"
@@ -99,6 +84,28 @@
             android:layout_height="wrap_content" />
     </LinearLayout>
 
+    <LinearLayout
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center">
+            <TextView
+                android:id="@+id/main_face_entry"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawableTop="@mipmap/ic_launcher"
+                android:gravity="center_horizontal"
+                android:text="人脸录入"
+                android:textColor="#000" />
+        </RelativeLayout>
+
+    </LinearLayout>
     <Button
         android:visibility="gone"
         android:id="@+id/data"
@@ -120,7 +127,7 @@
 
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="2">
+        android:layout_weight="1">
     </LinearLayout>
 
 </LinearLayout>

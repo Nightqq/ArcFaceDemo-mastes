@@ -37,7 +37,9 @@ import com.arcsoft.genderestimation.ASGE_FSDKGender;
 import com.arcsoft.genderestimation.ASGE_FSDKVersion;
 import com.arcsoft.sdk_demo.R;
 import com.arcsoft.sdk_demo.utils.Utils.AudioPlayUtils;
+import com.arcsoft.sdk_demo.utils.bean.IsCallInfo;
 import com.arcsoft.sdk_demo.utils.bean.PrisonerInfo;
+import com.arcsoft.sdk_demo.utils.helper.IsCallInfoHelp;
 import com.arcsoft.sdk_demo.utils.helper.PrisonerInfoHelp;
 import com.guo.android_extend.java.AbsLoop;
 import com.guo.android_extend.java.ExtByteArrayOutputStream;
@@ -84,6 +86,7 @@ public class DetecterActivity extends Activity implements OnCameraListener, View
 			mImageView.setImageAlpha(128);
 		}
 	};
+
 
 	class FRAbsLoop extends AbsLoop {
 		AFR_FSDKVersion version = new AFR_FSDKVersion();
@@ -226,6 +229,10 @@ public class DetecterActivity extends Activity implements OnCameraListener, View
 	private TextView mTextView1;
 	private ImageView mImageView;
 	private TextView rolltitle;
+	private TextView mCallAll;
+	private TextView mCallYes;
+	private TextView mCallNo;
+
 	/* (non-Javadoc)
 	 * @see android.app.Activity#onCreate(android.os.Bundle)
 	 */
@@ -257,6 +264,9 @@ public class DetecterActivity extends Activity implements OnCameraListener, View
 
 		rolltitle=(TextView)findViewById(R.id.roll_title);
 		mImageView = (ImageView) findViewById(R.id.imageView);
+		mCallAll = ((TextView) findViewById(R.id.call_All_num));
+		mCallYes = ((TextView) findViewById(R.id.call_yes));
+		mCallNo = ((TextView) findViewById(R.id.call_no));
 
 		AFT_FSDKError err = engine.AFT_FSDK_InitialFaceEngine(FaceDB.appid, FaceDB.ft_key, AFT_FSDKEngine.AFT_OPF_0_HIGHER_EXT, 16, 5);
 		Log.d(TAG, "AFT_FSDK_InitialFaceEngine =" + err.getCode());
@@ -278,15 +288,25 @@ public class DetecterActivity extends Activity implements OnCameraListener, View
 	}
 
 	private String crime_name="";
+	private int mCall_y=0;
+	private int mCall_n=0;
 	@Override
 	protected void onStart() {
 		super.onStart();
-		List<PrisonerInfo> prisonerInfoToDB = PrisonerInfoHelp.getPrisonerInfoToDB();
-		if (prisonerInfoToDB!=null&&prisonerInfoToDB.size()>0){
-			for (PrisonerInfo prisonerInfo : prisonerInfoToDB) {
-				crime_name= crime_name+prisonerInfo.getCrime_name()+"、";
+		List<IsCallInfo> isCallInfoInfoToDB = IsCallInfoHelp.getIsCallInfoInfoToDB();
+		if (isCallInfoInfoToDB!=null&&isCallInfoInfoToDB.size()>0){
+			mCallAll.setText(isCallInfoInfoToDB.size()+"");
+			for (IsCallInfo isCallInfo : isCallInfoInfoToDB) {
+				if (isCallInfo.getIscall()){
+					mCall_y++;
+				}else {
+					mCall_n++;
+					crime_name= crime_name+isCallInfo.getCrime_name()+"、";
+				}
 			}
-			rolltitle.setText("未点名人员"+prisonerInfoToDB.size()+":"+crime_name);
+			mCallYes.setText(mCall_y);
+			mCallNo.setText(mCall_n);
+			rolltitle.setText("未点名人员:"+crime_name);
 		}
 	}
 

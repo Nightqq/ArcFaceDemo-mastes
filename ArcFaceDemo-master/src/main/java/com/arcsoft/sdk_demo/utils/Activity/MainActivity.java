@@ -24,8 +24,13 @@ import android.widget.Toast;
 
 import com.arcsoft.sdk_demo.utils.Utils.HttpUtils;
 import com.arcsoft.sdk_demo.R;
+import com.arcsoft.sdk_demo.utils.bean.IsCallInfo;
+import com.arcsoft.sdk_demo.utils.bean.PrisonerInfo;
+import com.arcsoft.sdk_demo.utils.helper.IsCallInfoHelp;
+import com.arcsoft.sdk_demo.utils.helper.PrisonerInfoHelp;
 
 import java.util.Calendar;
+import java.util.List;
 
 public class MainActivity extends Activity implements OnClickListener {
     private final String TAG = this.getClass().toString();
@@ -141,7 +146,6 @@ public class MainActivity extends Activity implements OnClickListener {
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
         if (requestCode == REQUEST_CODE_IMAGE_OP && resultCode == RESULT_OK) {
             Uri mPath = data.getData();
             file = getPath(mPath);
@@ -369,10 +373,31 @@ public class MainActivity extends Activity implements OnClickListener {
     }
 
     private void startDetector(int camera) {
+        // TODO: 2018\8\21 0021 初始化点名数据暂在此次处理
+        initCall();
         Intent it = new Intent(MainActivity.this, DetecterActivity.class);
         it.putExtra("Camera", camera);
         startActivityForResult(it, REQUEST_CODE_OP);
     }
+
+    private void initCall() {
+        List<PrisonerInfo> prisonerInfoToDB = PrisonerInfoHelp.getPrisonerInfoToDB();
+        if (prisonerInfoToDB != null && prisonerInfoToDB.size() > 0) {
+            for (PrisonerInfo prisonerInfo : prisonerInfoToDB) {
+                IsCallInfo isCallInfo = new IsCallInfo();
+                isCallInfo.setId(prisonerInfo.getId());
+                isCallInfo.setCrime_id(prisonerInfo.getCrime_id());
+                isCallInfo.setCrime_jianqu(prisonerInfo.getCrime_jianqu());
+                isCallInfo.setCrime_xb(prisonerInfo.getCrime_xb());
+                isCallInfo.setCrime_name(prisonerInfo.getCrime_name());
+                isCallInfo.setIscall(false);
+                isCallInfo.setCrime_photo("无");
+                isCallInfo.setCallphoto_time("无");
+                IsCallInfoHelp.saveIsCallInfoToDB(isCallInfo);
+            }
+        }
+    }
+
 
 }
 

@@ -34,6 +34,8 @@ import com.arcsoft.facerecognition.AFR_FSDKFace;
 import com.arcsoft.facerecognition.AFR_FSDKVersion;
 import com.arcsoft.sdk_demo.utils.Utils.HttpUtils;
 import com.arcsoft.sdk_demo.R;
+import com.arcsoft.sdk_demo.utils.bean.PrisonerInfo;
+import com.arcsoft.sdk_demo.utils.helper.PrisonerInfoHelp;
 import com.guo.android_extend.image.ImageConverter;
 import com.guo.android_extend.widget.ExtImageView;
 import com.guo.android_extend.widget.HListView;
@@ -273,6 +275,7 @@ public class RegisterActivity extends Activity implements SurfaceHolder.Callback
 								public void onClick(DialogInterface dialog, int which) {
 									String name = mEditText.getText().toString();
 									HttpUtils.name = name;
+									saveDB(name);
 									((Application)RegisterActivity.this.getApplicationContext()).mFaceDB.addFace(name, mAFR_FSDKFace);
 									mRegisterViewAdapter.notifyDataSetChanged();
 									dialog.dismiss();
@@ -297,6 +300,18 @@ public class RegisterActivity extends Activity implements SurfaceHolder.Callback
 			}
 		}
 	}
+	private void saveDB(String name) {
+		//存储数据到本地
+		PrisonerInfo prisonerInfo = new PrisonerInfo();
+		prisonerInfo.setId(new Long(name));
+		prisonerInfo.setCrime_id(name);
+		prisonerInfo.setCrime_jianqu("一监区");
+		prisonerInfo.setCrime_name(name);
+		prisonerInfo.setCrime_xb("男");
+		prisonerInfo.setCrime_featuredata("见人脸库");
+		PrisonerInfoHelp.savePrisonerInfoToDB(prisonerInfo);
+	}
+
 
 	class Holder {
 		ExtImageView siv;

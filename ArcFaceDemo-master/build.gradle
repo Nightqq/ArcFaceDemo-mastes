@@ -1,4 +1,6 @@
 apply plugin: 'com.android.application'
+//使用greendao
+apply plugin: 'org.greenrobot.greendao'
 
 android {
     compileSdkVersion 24
@@ -16,6 +18,14 @@ android {
             abiFilters "armeabi", "armeabi-v7a", "x86", "mips"
         }
     }
+    //greendao配置
+    greendao {
+        //版本号，升级时可配置
+        schemaVersion 1
+        daoPackage 'com.arcsoft.sdk_demo.utils.dao'
+        targetGenDir 'src/main/java'
+    }
+
     buildTypes {
         release {
             minifyEnabled false
@@ -39,5 +49,7 @@ dependencies {
     compile 'com.google.code.gson:gson:2.6.2'
     compile 'com.alibaba:fastjson:1.2.47'
     compile 'com.alibaba:fastjson:1.1.68.android'
+    //greendao依赖
+    compile 'org.greenrobot:greendao:3.2.0'
 
 }

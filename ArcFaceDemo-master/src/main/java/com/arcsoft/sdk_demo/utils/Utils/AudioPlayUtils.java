@@ -48,9 +48,9 @@ public class AudioPlayUtils {
                     }
                 }
                 playerSound = MediaPlayer.create(mContext, mRawId);
-                if (isLoop) {
-                    playerSound.setLooping(true);
-                }
+//                if (isLoop) {
+//                    playerSound.setLooping(true);
+//                }
                 playerSound.start();
                 playerSound.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
                     @Override

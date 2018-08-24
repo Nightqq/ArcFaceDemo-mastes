@@ -37,10 +37,9 @@ import com.arcsoft.genderestimation.ASGE_FSDKGender;
 import com.arcsoft.genderestimation.ASGE_FSDKVersion;
 import com.arcsoft.sdk_demo.R;
 import com.arcsoft.sdk_demo.utils.Utils.AudioPlayUtils;
+import com.arcsoft.sdk_demo.utils.Utils.TextToSpeechUtils;
 import com.arcsoft.sdk_demo.utils.bean.IsCallInfo;
-import com.arcsoft.sdk_demo.utils.bean.PrisonerInfo;
 import com.arcsoft.sdk_demo.utils.helper.IsCallInfoHelp;
-import com.arcsoft.sdk_demo.utils.helper.PrisonerInfoHelp;
 import com.guo.android_extend.java.AbsLoop;
 import com.guo.android_extend.java.ExtByteArrayOutputStream;
 import com.guo.android_extend.tools.CameraHelper;
@@ -74,7 +73,6 @@ public class DetecterActivity extends Activity implements OnCameraListener, View
     List<ASGE_FSDKGender> genders = new ArrayList<>();
     int mCameraID;
     int mCameraRotate;
-    private int i=0;
     boolean mCameraMirror;
     byte[] mImageNV21 = null;
     FRAbsLoop mFRAbsLoop = null;
@@ -97,6 +95,7 @@ public class DetecterActivity extends Activity implements OnCameraListener, View
             mFRAbsLoop.start();
         }
     };
+    private TextToSpeechUtils textToSpeechUtils;
 
 
     class FRAbsLoop extends AbsLoop {
@@ -118,13 +117,10 @@ public class DetecterActivity extends Activity implements OnCameraListener, View
             Log.d(TAG, "FR=" + version.toString() + "," + error.getCode()); //(210, 178 - 478, 446), degree = 1　780, 2208 - 1942, 3370
         }
 
-
-
         @Override
         public void loop() {
-            if (mImageNV21 != null) {
-                i++;
-                Log.i("mImageNV21", i+"");
+            if (mImageNV21 != null&&flag0) {
+                flag0=false;
                 long time = System.currentTimeMillis();
                 AFR_FSDKError error = engine.AFR_FSDK_ExtractFRFeature(mImageNV21, mWidth, mHeight, AFR_FSDKEngine.CP_PAF_NV21, mAFT_FSDKFace.getRect(), mAFT_FSDKFace.getDegree(), result);
                 Log.d(TAG, "AFR_FSDK_ExtractFRFeature cost :" + (System.currentTimeMillis() - time) + "ms");
@@ -180,14 +176,13 @@ public class DetecterActivity extends Activity implements OnCameraListener, View
                 if (max > 0.6f) {
                     //点名成功，判断是否已经点名，语音提示
                     IsCallInfo callInfo = IsCallInfoHelp.isCall(name);
-                    if (mImageNV21 != null) {
-                        Log.i("mImageNV21", "不为空");
-                    }
                     if (callInfo.getIscall()) {
-                        if (audioPlayUtils == null || !audioPlayUtils.isPlaying()) {
+                       /* if (audioPlayUtils == null || !audioPlayUtils.isPlaying()) {
                             audioPlayUtils = new AudioPlayUtils(DetecterActivity.this, R.raw.call_repeat);
                             audioPlayUtils.play();
-                        }
+                        }*/
+                        textToSpeechUtils.notifyNewMessage(name+"请不要重复点名");
+                        flag0=true;
                         mFRAbsLoop.shutdown();
                         mHandler.removeCallbacks(open_loop);
                         mHandler.postDelayed(open_loop, 3000);
@@ -195,10 +190,11 @@ public class DetecterActivity extends Activity implements OnCameraListener, View
                     }
                     callInfo.setIscall(true);
                     IsCallInfoHelp.saveIsCallInfoToDB(callInfo);
-                    if (audioPlayUtils == null || !audioPlayUtils.isPlaying()) {
+                   /* if (audioPlayUtils == null || !audioPlayUtils.isPlaying()) {
                         audioPlayUtils = new AudioPlayUtils(DetecterActivity.this, R.raw.call_success);
                         audioPlayUtils.play();
-                    }
+                    }*/
+                    textToSpeechUtils.notifyNewMessage(name+"点名成功");
                     //fr success.
                     final float max_score = max;
                     Log.d(TAG, "fit Score:" + max + ", NAME:" + name);
@@ -222,20 +218,15 @@ public class DetecterActivity extends Activity implements OnCameraListener, View
                             mImageView.setImageBitmap(bmp);
                         }
                     });
-                    mFRAbsLoop.shutdown();
-                    if (mImageNV21 != null) {
-                        Log.i("mImageNV21", "xz不为空");
-                    }else {
-                        Log.i("mImageNV21", "xz为空");
-                    }
                     mHandler.removeCallbacks(open_loop);
-                    mHandler.postDelayed(open_loop, 5000);
+                    mHandler.postDelayed(open_loop, 4000);
                 } else {
                     //未识别语音提示
-                    if (audioPlayUtils == null || !audioPlayUtils.isPlaying()) {
+                    /*if (audioPlayUtils == null || !audioPlayUtils.isPlaying()) {
                         audioPlayUtils = new AudioPlayUtils(DetecterActivity.this, R.raw.call_failure);
                         audioPlayUtils.play();
-                    }
+                    }*/
+                    textToSpeechUtils.notifyNewMessage("人脸识别失败");
                     final String mNameShow = "未识别";
                     DetecterActivity.this.runOnUiThread(new Runnable() {
                         @Override
@@ -254,8 +245,13 @@ public class DetecterActivity extends Activity implements OnCameraListener, View
                             mImageView.setImageBitmap(bmp);
                         }
                     });
+                    mHandler.removeCallbacks(open_loop);
+                    mHandler.postDelayed(open_loop, 1500);
                 }
+                mFRAbsLoop.shutdown();
                 mImageNV21 = null;
+                flag0=true;
+
             }
         }
 
@@ -327,6 +323,8 @@ public class DetecterActivity extends Activity implements OnCameraListener, View
 
         mFRAbsLoop = new FRAbsLoop();
         mFRAbsLoop.start();
+
+        textToSpeechUtils = new TextToSpeechUtils(this);
     }
 
     private String crime_name = "";

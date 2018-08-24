@@ -2,7 +2,6 @@ package com.arcsoft.sdk_demo.utils.Utils;
 
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
-import okhttp3.RequestBody;
 
 /**
  * Created by Administrator on 2018/7/16.

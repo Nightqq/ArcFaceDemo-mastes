@@ -16,6 +16,8 @@ import android.os.CountDownTimer;
 import android.os.Environment;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
+import android.speech.tts.TextToSpeech;
+import android.speech.tts.TextToSpeechService;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -24,6 +26,7 @@ import android.widget.Toast;
 
 import com.arcsoft.sdk_demo.utils.Utils.HttpUtils;
 import com.arcsoft.sdk_demo.R;
+import com.arcsoft.sdk_demo.utils.Utils.TextToSpeechUtils;
 import com.arcsoft.sdk_demo.utils.bean.IsCallInfo;
 import com.arcsoft.sdk_demo.utils.bean.PrisonerInfo;
 import com.arcsoft.sdk_demo.utils.helper.IsCallInfoHelp;
@@ -31,6 +34,7 @@ import com.arcsoft.sdk_demo.utils.helper.PrisonerInfoHelp;
 
 import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
 
 public class MainActivity extends Activity implements OnClickListener {
     private final String TAG = this.getClass().toString();
@@ -40,6 +44,7 @@ public class MainActivity extends Activity implements OnClickListener {
     private static final int REQUEST_CODE_OP = 3;
     private String file;
     private TextView mTime;
+
 
     /* (non-Javadoc)
      * @see android.app.Activity#onCreate(android.os.Bundle)
@@ -69,7 +74,9 @@ public class MainActivity extends Activity implements OnClickListener {
         v.setOnClickListener(this);
         mTime = (TextView) this.findViewById(R.id.main_time);
         new TimeCount(countdown() * 1000, 1000).start();
+
     }
+
 
 
     private int countdown() {
@@ -93,6 +100,7 @@ public class MainActivity extends Activity implements OnClickListener {
         String ss = (miss % 3600) % 60 > 9 ? (miss % 3600) % 60 + "" : "0" + (miss % 3600) % 60;
         return hh + ":" + mm + ":" + ss;
     }
+
 
     private class TimeCount extends CountDownTimer {
 
@@ -179,6 +187,7 @@ public class MainActivity extends Activity implements OnClickListener {
             case R.id.main_face_down:
                 HttpUtils.QueryAddressTask queryAddressTask = new HttpUtils.QueryAddressTask(true, MainActivity.this, file);
                 queryAddressTask.execute();
+
                 break;
             case R.id.featuredata:
                /* HttpUtils.QueryAddressTask queryAddressTask = new HttpUtils.QueryAddressTask(false, MainActivity.this, file);

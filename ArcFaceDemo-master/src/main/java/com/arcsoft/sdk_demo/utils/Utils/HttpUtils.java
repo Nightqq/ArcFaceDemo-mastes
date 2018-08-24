@@ -10,7 +10,6 @@ import android.util.Base64;
 import android.util.JsonReader;
 import android.util.Log;
 import android.widget.Toast;
-
 import com.arcsoft.facerecognition.AFR_FSDKFace;
 import com.arcsoft.sdk_demo.utils.Activity.Application;
 import com.arcsoft.sdk_demo.utils.bean.FaceFeatureData;
@@ -19,7 +18,6 @@ import com.arcsoft.sdk_demo.utils.bean.upBean;
 import com.arcsoft.sdk_demo.utils.helper.PrisonerInfoHelp;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-
 import org.ksoap2.serialization.SoapObject;
 import org.ksoap2.serialization.SoapSerializationEnvelope;
 import org.ksoap2.transport.HttpTransportSE;

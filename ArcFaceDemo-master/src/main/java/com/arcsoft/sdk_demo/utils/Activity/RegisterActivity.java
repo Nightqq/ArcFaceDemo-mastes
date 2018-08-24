@@ -303,8 +303,9 @@ public class RegisterActivity extends Activity implements SurfaceHolder.Callback
 	private void saveDB(String name) {
 		//存储数据到本地
 		PrisonerInfo prisonerInfo = new PrisonerInfo();
-		prisonerInfo.setId(new Long(name));
-		prisonerInfo.setCrime_id(name);
+		int length = name.getBytes().length;
+		prisonerInfo.setId(new Long(length));
+		prisonerInfo.setCrime_id(length+"");
 		prisonerInfo.setCrime_jianqu("一监区");
 		prisonerInfo.setCrime_name(name);
 		prisonerInfo.setCrime_xb("男");

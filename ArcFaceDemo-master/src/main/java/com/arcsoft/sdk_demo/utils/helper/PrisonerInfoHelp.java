@@ -17,6 +17,7 @@ public class PrisonerInfoHelp {
             prisonerInfoDao.insertOrReplace(prisonerInfo);
         }
     }
+
     public static List<PrisonerInfo> getPrisonerInfoToDB() {
         return prisonerInfoDao.queryBuilder().list();
     }

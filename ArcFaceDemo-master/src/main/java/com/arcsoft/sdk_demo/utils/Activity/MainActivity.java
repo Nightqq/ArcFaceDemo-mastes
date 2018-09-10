@@ -188,6 +188,7 @@ public class MainActivity extends Activity implements OnClickListener {
                 HttpUtils.QueryAddressTask queryAddressTask = new HttpUtils.QueryAddressTask(true, MainActivity.this, file);
                 queryAddressTask.execute();
 
+
                 break;
             case R.id.featuredata:
                /* HttpUtils.QueryAddressTask queryAddressTask = new HttpUtils.QueryAddressTask(false, MainActivity.this, file);

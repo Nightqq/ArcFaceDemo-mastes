@@ -8,6 +8,13 @@ import android.graphics.ImageFormat;
 import android.graphics.Rect;
 import android.graphics.YuvImage;
 import android.hardware.Camera;
+import android.hardware.camera2.CameraAccessException;
+import android.hardware.camera2.CameraCaptureSession;
+import android.hardware.camera2.CameraDevice;
+import android.hardware.camera2.CameraMetadata;
+import android.hardware.camera2.CaptureFailure;
+import android.hardware.camera2.CaptureRequest;
+import android.hardware.camera2.TotalCaptureResult;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -218,6 +225,9 @@ public class DetecterActivity extends Activity implements OnCameraListener, View
                             mImageView.setImageBitmap(bmp);
                         }
                     });
+                    //拍照保存上传
+                    takePictures();
+
                     mHandler.removeCallbacks(open_loop);
                     mHandler.postDelayed(open_loop, 4000);
                 } else {
@@ -263,6 +273,17 @@ public class DetecterActivity extends Activity implements OnCameraListener, View
         }
     }
 
+    private void takePictures() {
+        mCamera.takePicture(null, null, new Camera.PictureCallback() {
+            @Override
+            public void onPictureTaken(byte[] bytes, Camera camera) {
+                // TODO: 2018\9\10 0010  保存上传
+                Bitmap bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                mCamera.startPreview();
+            }
+        });
+    }
+
     private TextView mTextView;
     private TextView mTextView1;
     private ImageView mImageView;
@@ -276,7 +297,6 @@ public class DetecterActivity extends Activity implements OnCameraListener, View
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
         mCameraID = getIntent().getIntExtra("Camera", 0) == 0 ? Camera.CameraInfo.CAMERA_FACING_BACK : Camera.CameraInfo.CAMERA_FACING_FRONT;
         mCameraRotate = getIntent().getIntExtra("Camera", 0) == 0 ? 90 : 270;
@@ -364,7 +384,6 @@ public class DetecterActivity extends Activity implements OnCameraListener, View
      */
     @Override
     protected void onDestroy() {
-        // TODO Auto-generated method stub
         super.onDestroy();
         mFRAbsLoop.shutdown();
         AFT_FSDKError err = engine.AFT_FSDK_UninitialFaceEngine();
@@ -379,7 +398,6 @@ public class DetecterActivity extends Activity implements OnCameraListener, View
 
     @Override
     public Camera setupCamera() {
-        // TODO Auto-generated method stub
         mCamera = Camera.open(mCameraID);
         try {
             Camera.Parameters parameters = mCamera.getParameters();
@@ -425,7 +443,7 @@ public class DetecterActivity extends Activity implements OnCameraListener, View
 
     @Override
     public boolean startPreviewLater() {
-        // TODO Auto-generated method stub
+
         return false;
     }
 

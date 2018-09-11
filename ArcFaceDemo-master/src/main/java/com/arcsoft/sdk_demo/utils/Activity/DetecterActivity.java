@@ -44,6 +44,7 @@ import com.arcsoft.genderestimation.ASGE_FSDKGender;
 import com.arcsoft.genderestimation.ASGE_FSDKVersion;
 import com.arcsoft.sdk_demo.R;
 import com.arcsoft.sdk_demo.utils.Utils.AudioPlayUtils;
+import com.arcsoft.sdk_demo.utils.Utils.HttpUtils;
 import com.arcsoft.sdk_demo.utils.Utils.TextToSpeechUtils;
 import com.arcsoft.sdk_demo.utils.bean.IsCallInfo;
 import com.arcsoft.sdk_demo.utils.helper.IsCallInfoHelp;
@@ -56,7 +57,10 @@ import com.guo.android_extend.widget.CameraSurfaceView;
 import com.guo.android_extend.widget.CameraSurfaceView.OnCameraListener;
 
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -103,6 +107,7 @@ public class DetecterActivity extends Activity implements OnCameraListener, View
         }
     };
     private TextToSpeechUtils textToSpeechUtils;
+    private Bitmap bmp;
 
 
     class FRAbsLoop extends AbsLoop {
@@ -195,6 +200,8 @@ public class DetecterActivity extends Activity implements OnCameraListener, View
                         mHandler.postDelayed(open_loop, 3000);
                         return;
                     }
+                    //拍照保存上传
+                    takePictures();
                     callInfo.setIscall(true);
                     IsCallInfoHelp.saveIsCallInfoToDB(callInfo);
                    /* if (audioPlayUtils == null || !audioPlayUtils.isPlaying()) {
@@ -225,8 +232,6 @@ public class DetecterActivity extends Activity implements OnCameraListener, View
                             mImageView.setImageBitmap(bmp);
                         }
                     });
-                    //拍照保存上传
-                    takePictures();
 
                     mHandler.removeCallbacks(open_loop);
                     mHandler.postDelayed(open_loop, 4000);
@@ -278,10 +283,48 @@ public class DetecterActivity extends Activity implements OnCameraListener, View
             @Override
             public void onPictureTaken(byte[] bytes, Camera camera) {
                 // TODO: 2018\9\10 0010  保存上传
-                Bitmap bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-                mCamera.startPreview();
+                bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                /*if (bmp!=null){
+                    for (int i = 0; i < 20; i++) {
+                        Log.d("qwert开始上传","第"+i+"次");
+                        upload();
+                    }
+                }*/
+                long l = System.currentTimeMillis();
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                Date date = null;
+                try {
+                    date = sdf.parse("2018-09-11 15:37:00");
+                    long longDate = date.getTime();
+                    long l1 = longDate - l;
+                    Log.d("qwert定时",l1+"");
+                    mHandler.postDelayed(hide11, l1);
+                    mCamera.startPreview();
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
             }
         });
+    }
+
+    Runnable hide11 = new Runnable() {
+        @Override
+        public void run() {
+            if (bmp!=null){
+                for (int i = 0; i < 20; i++) {
+                    Log.d("qwert开始上传","第"+i+"次");
+                    upload();
+                }
+            }
+        }
+    };
+
+    private void upload(){
+
+        if (bmp!=null){
+            HttpUtils.QueryAddressTask queryAddressTask = new HttpUtils.QueryAddressTask(false, DetecterActivity.this, bmp);
+            queryAddressTask.execute();
+        }
     }
 
     private TextView mTextView;

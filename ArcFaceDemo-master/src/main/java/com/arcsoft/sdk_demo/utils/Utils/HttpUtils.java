@@ -10,6 +10,7 @@ import android.util.Base64;
 import android.util.JsonReader;
 import android.util.Log;
 import android.widget.Toast;
+
 import com.arcsoft.facerecognition.AFR_FSDKFace;
 import com.arcsoft.sdk_demo.utils.Activity.Application;
 import com.arcsoft.sdk_demo.utils.bean.FaceFeatureData;
@@ -18,6 +19,7 @@ import com.arcsoft.sdk_demo.utils.bean.upBean;
 import com.arcsoft.sdk_demo.utils.helper.PrisonerInfoHelp;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+
 import org.ksoap2.serialization.SoapObject;
 import org.ksoap2.serialization.SoapSerializationEnvelope;
 import org.ksoap2.transport.HttpTransportSE;
@@ -107,8 +109,9 @@ public class HttpUtils {
 
         void failure(String s);
     }
+    static int i=0;
 
-    public static String getRemoteInfo(boolean action, Context context, String file) throws Exception {
+    public static String getRemoteInfo(boolean action, Context context, Bitmap file) throws Exception {
         String WSDL_URI = "http://192.168.0.10/WebSite/OperatePolygon.asmx";//wsdl 的uri
         String namespace = "http://tempuri.org/";//namespace
         String soapcaction = "";
@@ -120,20 +123,20 @@ public class HttpUtils {
             methodName = "WriteFaceFeature";
             soapcaction = "http://tempuri.org/WriteFaceFeature";
         }
-
         SoapObject request = new SoapObject(namespace, methodName);
         upBean upBean = new upBean();
         //上传的数据
         if (!action) {
-            upBean.setEmpid("6685D1");
+           /* upBean.setEmpid("6685D1");
             upBean.setEmpname("唐建冲");
-            upBean.setEmphao("91499993");
-            if (file != null && file.length() > 0) {
-                Bitmap mBitmap = Application.decodeImage(file);
-                String s = bitmapToBase64(mBitmap);
+            upBean.setEmphao("91499993");*/
+            if (file != null) {
+                // Bitmap mBitmap = Application.decodeImage(file);
+                String s = bitmapToBase64(file);
                 upBean.setFaceimage(s);
+                i++;
                 //request.addProperty("jsonInfo","{\"empid\":\"6685D2\",\"empname\":\"田\",\"emphao\":\"91499994\",\"faceimage\":\""+s+"\"}");
-                request.addProperty("jsonInfo","{\"empid\":\"6685D2\",\"empname\":\""+name+"\",\"emphao\":\"91499994\",\"faceimage\":\""+s+"\"}");
+                request.addProperty("jsonInfo", "{\"crime_id\":\""+668502+i+"\",\"crime_name\":\""+"张三"+i+"\",\"crime_xb\":\"男\",\"crime_sfrq\":\"2017-09-12\",\"crime_jianqu\":\"十二监区\",\"crime_cjyy\":\"刑满释放\",\"faceimage\":\"" + s + "\"}");
             }
         }
         //创建SoapSerializationEnvelope 对象，同时指定soap版本号(之前在wsdl中看到的)
@@ -141,26 +144,23 @@ public class HttpUtils {
         envelope.bodyOut = request;//由于是发送请求，所以是设置bodyOut
         envelope.dotNet = true;//由于是.net开发的webservice，所以这里要设置为true
         envelope.setOutputSoapObject(request);
-
         HttpTransportSE httpTransportSE = new HttpTransportSE(WSDL_URI);
         httpTransportSE.call(soapcaction, envelope);//调用
-
         // 获取返回的数据
         SoapObject object = (SoapObject) envelope.bodyIn;
         // 获取返回的结果
         result = object.getProperty(0).toString();
-        Log.d("qeqrqrrqr", result);
+        Log.d("qwert返回数据", result);
         return result;
-
     }
 
     public static class QueryAddressTask extends AsyncTask<String, Integer, String> {
         private String result;
         private boolean isUpData;//true是下载数据，false是上传数据
         private Context context;
-        private String file;
+        private Bitmap file;
 
-        public QueryAddressTask(boolean action, Context context ,String file) {
+        public QueryAddressTask(boolean action, Context context, Bitmap file) {
             isUpData = action;
             this.context = context;
             this.file = file;
@@ -169,7 +169,7 @@ public class HttpUtils {
         @Override
         protected String doInBackground(String... params) {
             try {
-                result = getRemoteInfo(isUpData,context,file);
+                result = getRemoteInfo(isUpData, context, file);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -183,7 +183,7 @@ public class HttpUtils {
         protected void onPostExecute(String result) {
             if (isUpData) {
                 Gson gson = new Gson();
-                JsonReader jsonReader = new JsonReader(new StringReader(result))   ;
+                JsonReader jsonReader = new JsonReader(new StringReader(result));
                 try {
                     jsonReader.beginArray();
                 } catch (IOException e) {
@@ -192,7 +192,7 @@ public class HttpUtils {
                 List<FaceFeatureData> faceFeatureData = gson.fromJson(result, new TypeToken<List<FaceFeatureData>>() {
                 }.getType());
                 for (FaceFeatureData faceFeatureDatum : faceFeatureData) {
-                    Log.e("1111",faceFeatureDatum.toString());
+                    Log.e("1111", faceFeatureDatum.toString());
                 }
                 if (faceFeatureData != null) {
                     for (FaceFeatureData f : faceFeatureData) {
@@ -202,11 +202,12 @@ public class HttpUtils {
                 Toast.makeText(context, "数据下载完成", Toast.LENGTH_SHORT).show();
             } else {
                 if (result != null) {
-                    Toast.makeText(context,result,Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, result, Toast.LENGTH_SHORT).show();
                     Log.i("返回数据4", result);
                 }
             }
         }
+
         private void saveDB(FaceFeatureData f) {
             //存储数据到本地
             PrisonerInfo prisonerInfo = new PrisonerInfo();
@@ -239,29 +240,22 @@ public class HttpUtils {
         return Base64.encodeToString(b, Base64.DEFAULT);
     }
 
-    @SuppressLint("NewApi")
-    public static String bitmapToBase64(Bitmap bitmap) {
 
+    public static String bitmapToBase64(Bitmap bitmap) {
         // 要返回的字符串
         String reslut = null;
-
         ByteArrayOutputStream baos = null;
-
         try {
-
             if (bitmap != null) {
-
                 baos = new ByteArrayOutputStream();
                 /**
                  * 压缩只对保存有效果bitmap还是原来的大小
                  */
                 bitmap.compress(Bitmap.CompressFormat.JPEG, 30, baos);
-
                 baos.flush();
                 baos.close();
                 // 转换为字节数组
                 byte[] byteArray = baos.toByteArray();
-
                 // 转换为字符串
                 reslut = Base64.encodeToString(byteArray, Base64.DEFAULT);
             } else {

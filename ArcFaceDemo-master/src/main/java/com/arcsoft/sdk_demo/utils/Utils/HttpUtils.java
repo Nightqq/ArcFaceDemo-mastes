@@ -58,6 +58,7 @@ public class HttpUtils {
     private static String featuredata;
 
     public HttpUtils() {
+
     }
 
     //初始化
@@ -136,13 +137,14 @@ public class HttpUtils {
                 upBean.setFaceimage(s);
                 i++;
                 //request.addProperty("jsonInfo","{\"empid\":\"6685D2\",\"empname\":\"田\",\"emphao\":\"91499994\",\"faceimage\":\""+s+"\"}");
-                request.addProperty("jsonInfo", "{\"crime_id\":\""+668502+i+"\",\"crime_name\":\""+"张三"+i+"\",\"crime_xb\":\"男\",\"crime_sfrq\":\"2017-09-12\",\"crime_jianqu\":\"十二监区\",\"crime_cjyy\":\"刑满释放\",\"faceimage\":\"" + s + "\"}");
+                request.addProperty("jsonInfo", "{\"crime_id\":\""+668602+i+"\",\"crime_name\":\""+"张三"+i+"\",\"crime_xb\":\"男\",\"crime_sfrq\":\"2017-09-12\",\"crime_jianqu\":\"十二监区\",\"crime_cjyy\":\"刑满释放\",\"faceimage\":\"" + s + "\"}");
             }
         }
         //创建SoapSerializationEnvelope 对象，同时指定soap版本号(之前在wsdl中看到的)
         SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapSerializationEnvelope.VER12);
         envelope.bodyOut = request;//由于是发送请求，所以是设置bodyOut
         envelope.dotNet = true;//由于是.net开发的webservice，所以这里要设置为true
+        Log.d("qwert上传数据", "开始"+i);
         envelope.setOutputSoapObject(request);
         HttpTransportSE httpTransportSE = new HttpTransportSE(WSDL_URI);
         httpTransportSE.call(soapcaction, envelope);//调用

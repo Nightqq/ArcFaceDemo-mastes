@@ -30,6 +30,8 @@ public class FaceDB {
 	public static String fr_key = "C275CX9bsZGdcdfF7kcpgk4yMM1VNmzfxTSRTKLt6LL8";
 	public static String age_key = " C275CX9bsZGdcdfF7kcpgk5bAMKGxkuGhWStTt2Bqd7Z";
 	public static String gender_key = " C275CX9bsZGdcdfF7kcpgk5iKkaU3Krw8D38De5L9cc1";
+	public static String live_appid = "4BQav3wGWbhKc57wxVxCQ3oxoLRbFyh8RXx9fHEsJmY9";
+	public static String live_key = "3ejkVwc6wntSBgFJUFNJ4YBGf6Z86GSsPd961H1qs5g7";
 
 	String mDBPath;
 	List<FaceRegist> mRegister;

@@ -18,12 +18,16 @@ import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.speech.tts.TextToSpeech;
 import android.speech.tts.TextToSpeechService;
+import android.support.annotation.RequiresApi;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.Toolbar;
 
+import com.arcsoft.liveness.ErrorInfo;
+import com.arcsoft.liveness.LivenessEngine;
 import com.arcsoft.sdk_demo.utils.Utils.HttpUtils;
 import com.arcsoft.sdk_demo.R;
 import com.arcsoft.sdk_demo.utils.Utils.TextToSpeechUtils;
@@ -35,6 +39,7 @@ import com.arcsoft.sdk_demo.utils.helper.PrisonerInfoHelp;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
+import java.util.concurrent.Executors;
 
 public class MainActivity extends Activity implements OnClickListener {
     private final String TAG = this.getClass().toString();
@@ -44,8 +49,7 @@ public class MainActivity extends Activity implements OnClickListener {
     private static final int REQUEST_CODE_OP = 3;
     private String file;
     private TextView mTime;
-
-
+    private LivenessEngine livenessEngine;
     /* (non-Javadoc)
      * @see android.app.Activity#onCreate(android.os.Bundle)
      */
@@ -73,7 +77,11 @@ public class MainActivity extends Activity implements OnClickListener {
         v = this.findViewById(R.id.featuredata);
         v.setOnClickListener(this);
         mTime = (TextView) this.findViewById(R.id.main_time);
+
         new TimeCount(countdown() * 1000, 1000).start();
+
+        //活体检测激活
+        livenessEngine = new LivenessEngine();
 
     }
 
@@ -185,8 +193,27 @@ public class MainActivity extends Activity implements OnClickListener {
         // TODO Auto-generated method stub
         switch (paramView.getId()) {
             case R.id.main_face_down:
-                HttpUtils.QueryAddressTask queryAddressTask = new HttpUtils.QueryAddressTask(true, MainActivity.this, null);
-                queryAddressTask.execute();
+               // HttpUtils.QueryAddressTask queryAddressTask = new HttpUtils.QueryAddressTask(true, MainActivity.this, null);
+               // queryAddressTask.execute();
+                Executors.newSingleThreadExecutor().execute(new Runnable() {
+                    @Override
+                    public void run() {
+                        final long activeCode = livenessEngine.activeEngine(MainActivity.this,FaceDB.live_appid,
+                                FaceDB.live_key).getCode();
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                if(activeCode == ErrorInfo.MOK) {
+                                    Toast.makeText(MainActivity.this, "活体引擎激活成功", Toast.LENGTH_SHORT).show();
+                                } else if(activeCode == ErrorInfo.MERR_AL_BASE_ALREADY_ACTIVATED){
+                                    Toast.makeText(MainActivity.this, "活体引擎已激活", Toast.LENGTH_SHORT).show();
+                                } else {
+                                    Toast.makeText(MainActivity.this, "活体引擎激活失败，errorcode：" + activeCode, Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        });
+                    }
+                });
                 break;
             case R.id.featuredata:
                /* HttpUtils.QueryAddressTask queryAddressTask = new HttpUtils.QueryAddressTask(false, MainActivity.this, file);

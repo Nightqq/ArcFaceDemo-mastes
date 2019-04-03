@@ -8,13 +8,6 @@ import android.graphics.ImageFormat;
 import android.graphics.Rect;
 import android.graphics.YuvImage;
 import android.hardware.Camera;
-import android.hardware.camera2.CameraAccessException;
-import android.hardware.camera2.CameraCaptureSession;
-import android.hardware.camera2.CameraDevice;
-import android.hardware.camera2.CameraMetadata;
-import android.hardware.camera2.CaptureFailure;
-import android.hardware.camera2.CaptureRequest;
-import android.hardware.camera2.TotalCaptureResult;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -143,8 +136,8 @@ public class DetecterActivity extends Activity implements OnCameraListener, View
 
         @Override
         public void loop() {
-            if (mImageNV21 != null&&flag0) {
-                flag0=false;
+            if (mImageNV21 != null && flag0) {
+                flag0 = false;
                 long time = System.currentTimeMillis();
                 AFR_FSDKError error = engine.AFR_FSDK_ExtractFRFeature(mImageNV21, mWidth, mHeight, AFR_FSDKEngine.CP_PAF_NV21, mAFT_FSDKFace.getRect(), mAFT_FSDKFace.getDegree(), result);
                 Log.d(TAG, "AFR_FSDK_ExtractFRFeature cost :" + (System.currentTimeMillis() - time) + "ms");
@@ -217,7 +210,7 @@ public class DetecterActivity extends Activity implements OnCameraListener, View
                     //拍照保存上传
                     takePictures();
                     IsCallInfo callInfo = IsCallInfoHelp.isCall(name);
-                    if (callInfo!=null){
+                    if (callInfo != null) {
                         callInfo.setIscall(true);
                         IsCallInfoHelp.saveIsCallInfoToDB(callInfo);
                     }
@@ -225,7 +218,7 @@ public class DetecterActivity extends Activity implements OnCameraListener, View
                         audioPlayUtils = new AudioPlayUtils(DetecterActivity.this, R.raw.call_success);
                         audioPlayUtils.play();
                     }*/
-                    textToSpeechUtils.notifyNewMessage(name+"点名成功");
+                    textToSpeechUtils.notifyNewMessage(name + "点名成功");
                     //fr success.
                     final float max_score = max;
                     Log.d(TAG, "fit Score:" + max + ", NAME:" + name);
@@ -282,7 +275,7 @@ public class DetecterActivity extends Activity implements OnCameraListener, View
                 }
                 mFRAbsLoop.shutdown();
                 mImageNV21 = null;
-                flag0=true;
+                flag0 = true;
 
             }
         }
@@ -295,18 +288,18 @@ public class DetecterActivity extends Activity implements OnCameraListener, View
         }
     }
 
-    private void livePictureDetection(Bitmap mHeadBmp){
+    private void livePictureDetection(Bitmap mHeadBmp) {
         //活体引擎初始化（图片）
         livenessEngine = new LivenessEngine();
         ErrorInfo live_error = livenessEngine.initEngine(this, LivenessEngine.AL_DETECT_MODE_IMAGE);
-        if(live_error.getCode() != ErrorInfo.MOK) {
+        if (live_error.getCode() != ErrorInfo.MOK) {
             Toast.makeText(this, "活体初始化失败，errorcode：" + live_error.getCode(), Toast.LENGTH_SHORT).show();
             //FD引擎销毁
             fdEngine.AFD_FSDK_UninitialFaceEngine();
             return;
         }
-      //  Bitmap mHeadBmp = BitmapFactory.decodeResource(getResources(), R.drawable.sample);
-        if(mHeadBmp == null) {
+        //  Bitmap mHeadBmp = BitmapFactory.decodeResource(getResources(), R.drawable.sample);
+        if (mHeadBmp == null) {
             toast("图片不存在");
             unInitEngine();
             return;
@@ -337,7 +330,7 @@ public class DetecterActivity extends Activity implements OnCameraListener, View
             int maxIndex = ImageUtils.findFDMaxAreaFace(fdFaceList);
 
             final List<FaceInfo> faceInfos = new ArrayList<>();
-            if(maxIndex != -1) {
+            if (maxIndex != -1) {
                 AFD_FSDKFace face = fdFaceList.get(maxIndex);
                 FaceInfo faceInfo = new FaceInfo(face.getRect(), face.getDegree());
                 faceInfos.add(faceInfo);
@@ -348,19 +341,19 @@ public class DetecterActivity extends Activity implements OnCameraListener, View
                     LivenessEngine.CP_PAF_NV21, faceInfos, livenessInfos);
             Log.d(TAG, "startLiveness: errorcode " + livenessError.getCode());
             if (livenessError.getCode() == ErrorInfo.MOK) {
-                if(livenessInfos.size() == 0) {
+                if (livenessInfos.size() == 0) {
                     toast("无人脸");
                     return;
                 }
                 final int liveness = livenessInfos.get(0).getLiveness();
                 Log.d(TAG, "getLivenessScore: liveness " + liveness);
-                if(liveness == LivenessInfo.NOT_LIVE) {
+                if (liveness == LivenessInfo.NOT_LIVE) {
                     toast("非活体");
                     textToSpeechUtils.notifyNewMessage("非活体");
-                } else if(liveness == LivenessInfo.LIVE) {
+                } else if (liveness == LivenessInfo.LIVE) {
                     toast("活体");
                     textToSpeechUtils.notifyNewMessage("活体");
-                } else if(liveness == LivenessInfo.MORE_THAN_ONE_FACE) {
+                } else if (liveness == LivenessInfo.MORE_THAN_ONE_FACE) {
                     toast("非单人脸信息");
                     textToSpeechUtils.notifyNewMessage("非单人脸信息");
                 } else {
@@ -370,6 +363,7 @@ public class DetecterActivity extends Activity implements OnCameraListener, View
             }
         }
     }
+
     public void unInitEngine() {
         //FD引擎销毁
         fdEngine.AFD_FSDK_UninitialFaceEngine();
@@ -403,7 +397,7 @@ public class DetecterActivity extends Activity implements OnCameraListener, View
                     date = sdf.parse("2018-09-11 15:50:00");
                     long longDate = date.getTime();
                     long l1 = longDate - l;
-                    Log.d("qwert定时",l1+"");
+                    Log.d("qwert定时", l1 + "");
                     mHandler.postDelayed(hide11, l1);
                     mCamera.startPreview();
                 } catch (ParseException e) {
@@ -426,10 +420,12 @@ public class DetecterActivity extends Activity implements OnCameraListener, View
         }
     };
 
-    private void upload(){
-        if (bmp!=null){
+    private void upload() {
+        if (bmp != null) {
             HttpUtils.QueryAddressTask queryAddressTask = new HttpUtils.QueryAddressTask(false, DetecterActivity.this, bmp);
             queryAddressTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        } else {
+            Toast.makeText(DetecterActivity.this, "数据为空", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -496,7 +492,7 @@ public class DetecterActivity extends Activity implements OnCameraListener, View
         int fdInitErrorCode = fdEngine.AFD_FSDK_InitialFaceEngine(FaceDB.appid,
                 FaceDB.fd_key, AFD_FSDKEngine.AFD_OPF_0_HIGHER_EXT,
                 16, 5).getCode();
-        if(fdInitErrorCode != AFD_FSDKError.MOK) {
+        if (fdInitErrorCode != AFD_FSDKError.MOK) {
             Toast.makeText(this, "FD初始化失败，errorcode：" + fdInitErrorCode, Toast.LENGTH_SHORT).show();
             return;
         }
@@ -556,6 +552,13 @@ public class DetecterActivity extends Activity implements OnCameraListener, View
 
         ASGE_FSDKError err2 = mGenderEngine.ASGE_FSDK_UninitGenderEngine();
         Log.d(TAG, "ASGE_FSDK_UninitGenderEngine =" + err2.getCode());
+
+        mHandler.removeCallbacksAndMessages(hide);
+        mHandler.removeCallbacksAndMessages(hide11);
+        mHandler.removeCallbacksAndMessages(open_loop);
+        hide = null;
+        hide11 = null;
+
     }
 
     @Override

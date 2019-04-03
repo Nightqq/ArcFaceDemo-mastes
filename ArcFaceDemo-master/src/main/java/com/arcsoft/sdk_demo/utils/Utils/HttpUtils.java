@@ -1,6 +1,5 @@
 package com.arcsoft.sdk_demo.utils.Utils;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
@@ -110,24 +109,24 @@ public class HttpUtils {
 
         void failure(String s);
     }
-    static int i=0;
+
+    static int i = 0;
 
     public static String getRemoteInfo(boolean action, Context context, Bitmap file) throws Exception {
         String WSDL_URI = "http://192.168.0.10/WebSite/OperatePolygon.asmx";//wsdl 的uri
         String namespace = "http://tempuri.org/";//namespace
         String soapcaction = "";
-        if (action) {
+        if (action) {//下载
             //要调用的方法名称
             methodName = "GetFaceFeature";
             soapcaction = "http://tempuri.org/GetFaceFeature";
-        } else {
+        } else {//上传
             methodName = "WriteFaceFeature";
             soapcaction = "http://tempuri.org/WriteFaceFeature";
         }
         SoapObject request = new SoapObject(namespace, methodName);
         upBean upBean = new upBean();
-        //上传的数据
-        if (!action) {
+        if (!action) {//上传的数据
            /* upBean.setEmpid("6685D1");
             upBean.setEmpname("唐建冲");
             upBean.setEmphao("91499993");*/
@@ -137,14 +136,13 @@ public class HttpUtils {
                 upBean.setFaceimage(s);
                 i++;
                 //request.addProperty("jsonInfo","{\"empid\":\"6685D2\",\"empname\":\"田\",\"emphao\":\"91499994\",\"faceimage\":\""+s+"\"}");
-                request.addProperty("jsonInfo", "{\"crime_id\":\""+668602+i+"\",\"crime_name\":\""+"张三"+i+"\",\"crime_xb\":\"男\",\"crime_sfrq\":\"2017-09-12\",\"crime_jianqu\":\"十二监区\",\"crime_cjyy\":\"刑满释放\",\"faceimage\":\"" + s + "\"}");
+                request.addProperty("jsonInfo", "{\"crime_id\":\"" + 668602 + i + "\",\"crime_name\":\"" + "张三" + i + "\",\"crime_xb\":\"男\",\"crime_sfrq\":\"2017-09-12\",\"crime_jianqu\":\"十二监区\",\"crime_cjyy\":\"刑满释放\",\"faceimage\":\"" + s + "\"}");
             }
         }
         //创建SoapSerializationEnvelope 对象，同时指定soap版本号(之前在wsdl中看到的)
         SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapSerializationEnvelope.VER12);
         envelope.bodyOut = request;//由于是发送请求，所以是设置bodyOut
         envelope.dotNet = true;//由于是.net开发的webservice，所以这里要设置为true
-        Log.d("qwert上传数据", "开始"+i);
         envelope.setOutputSoapObject(request);
         HttpTransportSE httpTransportSE = new HttpTransportSE(WSDL_URI);
         httpTransportSE.call(soapcaction, envelope);//调用
@@ -164,7 +162,7 @@ public class HttpUtils {
 
         public QueryAddressTask(boolean action, Context context, Bitmap file) {
             isUpData = action;
-            this.context = context;
+            this.context = Application.getContext();
             this.file = file;
         }
 
@@ -175,8 +173,7 @@ public class HttpUtils {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            //将结果返回给onPostExecute方法
-            return result;
+            return result;//将结果返回给onPostExecute方法
         }
 
 
@@ -190,18 +187,20 @@ public class HttpUtils {
                     jsonReader.beginArray();
                 } catch (IOException e) {
                     e.printStackTrace();
+                    Log.i("数据解析错误：", e.getMessage());
                 }
                 List<FaceFeatureData> faceFeatureData = gson.fromJson(result, new TypeToken<List<FaceFeatureData>>() {
                 }.getType());
-                for (FaceFeatureData faceFeatureDatum : faceFeatureData) {
-                    Log.e("1111", faceFeatureDatum.toString());
-                }
-                if (faceFeatureData != null) {
-                    for (FaceFeatureData f : faceFeatureData) {
-                        saveDB(f);
+                if (faceFeatureData != null && faceFeatureData.size() > 0) {
+                    for (FaceFeatureData faceFeatureDatum : faceFeatureData) {
+                        //Log.e("1111", faceFeatureDatum.toString());
+                        saveDB(faceFeatureDatum);
                     }
+                    Toast.makeText(context, "数据下载并保存完成，共有： " + faceFeatureData.size() + " 条数据", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(context, "数据为空", Toast.LENGTH_SHORT).show();
                 }
-                Toast.makeText(context, "数据下载完成", Toast.LENGTH_SHORT).show();
+
             } else {
                 if (result != null) {
                     Toast.makeText(context, result, Toast.LENGTH_SHORT).show();

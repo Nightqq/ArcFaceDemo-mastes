@@ -16,21 +16,15 @@ import android.os.CountDownTimer;
 import android.os.Environment;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
-import android.speech.tts.TextToSpeech;
-import android.speech.tts.TextToSpeechService;
-import android.support.annotation.RequiresApi;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.Toolbar;
 
 import com.arcsoft.liveness.ErrorInfo;
 import com.arcsoft.liveness.LivenessEngine;
-import com.arcsoft.sdk_demo.utils.Utils.HttpUtils;
 import com.arcsoft.sdk_demo.R;
-import com.arcsoft.sdk_demo.utils.Utils.TextToSpeechUtils;
 import com.arcsoft.sdk_demo.utils.bean.IsCallInfo;
 import com.arcsoft.sdk_demo.utils.bean.PrisonerInfo;
 import com.arcsoft.sdk_demo.utils.helper.IsCallInfoHelp;
@@ -38,7 +32,6 @@ import com.arcsoft.sdk_demo.utils.helper.PrisonerInfoHelp;
 
 import java.util.Calendar;
 import java.util.List;
-import java.util.Locale;
 import java.util.concurrent.Executors;
 
 public class MainActivity extends Activity implements OnClickListener {

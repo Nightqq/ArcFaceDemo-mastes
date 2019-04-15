@@ -9,6 +9,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Message;
 import android.text.InputFilter;
@@ -302,6 +303,7 @@ public class RegisterActivity extends Activity implements SurfaceHolder.Callback
 	}
 	private void saveDB(String name) {
 		//存储数据到本地
+		Application.REname=name;
 		PrisonerInfo prisonerInfo = new PrisonerInfo();
 		int length = name.getBytes().length;
 		prisonerInfo.setId(new Long(length));
@@ -311,6 +313,10 @@ public class RegisterActivity extends Activity implements SurfaceHolder.Callback
 		prisonerInfo.setCrime_xb("男");
 		prisonerInfo.setCrime_featuredata("见人脸库");
 		PrisonerInfoHelp.savePrisonerInfoToDB(prisonerInfo);
+		//注册结束上传
+		HttpUtils.QueryAddressTask queryAddressTask = new HttpUtils.QueryAddressTask(false, RegisterActivity.this, mBitmap);
+		queryAddressTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+
 	}
 
 

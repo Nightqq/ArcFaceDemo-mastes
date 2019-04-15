@@ -403,8 +403,7 @@ public class DetecterActivity extends Activity implements OnCameraListener, View
                     date = sdf.parse("2018-09-11 15:50:00");
                     long longDate = date.getTime();
                     long l1 = longDate - l;
-                    Log.d("qwert定时",l1+"");
-                    mHandler.postDelayed(hide11, l1);
+                    //mHandler.postDelayed(hide11, l1);
                     mCamera.startPreview();
                 } catch (ParseException e) {
                     e.printStackTrace();
@@ -417,12 +416,6 @@ public class DetecterActivity extends Activity implements OnCameraListener, View
         @Override
         public void run() {
             upload();
-           /* if (bmp!=null){
-                for (int i = 0; i < 20; i++) {
-                    Log.d("qwert开始上传","第"+i+"次");
-                    upload();
-                }
-            }*/
         }
     };
 
@@ -556,6 +549,9 @@ public class DetecterActivity extends Activity implements OnCameraListener, View
 
         ASGE_FSDKError err2 = mGenderEngine.ASGE_FSDK_UninitGenderEngine();
         Log.d(TAG, "ASGE_FSDK_UninitGenderEngine =" + err2.getCode());
+
+        textToSpeechUtils.release();
+
     }
 
     @Override

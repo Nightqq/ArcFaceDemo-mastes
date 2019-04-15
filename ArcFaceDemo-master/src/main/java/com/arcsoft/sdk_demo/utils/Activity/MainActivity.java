@@ -16,21 +16,16 @@ import android.os.CountDownTimer;
 import android.os.Environment;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
-import android.speech.tts.TextToSpeech;
-import android.speech.tts.TextToSpeechService;
-import android.support.annotation.RequiresApi;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.Toolbar;
 
 import com.arcsoft.liveness.ErrorInfo;
 import com.arcsoft.liveness.LivenessEngine;
-import com.arcsoft.sdk_demo.utils.Utils.HttpUtils;
 import com.arcsoft.sdk_demo.R;
-import com.arcsoft.sdk_demo.utils.Utils.TextToSpeechUtils;
+import com.arcsoft.sdk_demo.utils.Utils.HttpUtils;
 import com.arcsoft.sdk_demo.utils.bean.IsCallInfo;
 import com.arcsoft.sdk_demo.utils.bean.PrisonerInfo;
 import com.arcsoft.sdk_demo.utils.helper.IsCallInfoHelp;
@@ -38,7 +33,6 @@ import com.arcsoft.sdk_demo.utils.helper.PrisonerInfoHelp;
 
 import java.util.Calendar;
 import java.util.List;
-import java.util.Locale;
 import java.util.concurrent.Executors;
 
 public class MainActivity extends Activity implements OnClickListener {
@@ -59,6 +53,7 @@ public class MainActivity extends Activity implements OnClickListener {
         super.onCreate(savedInstanceState);
         //this.setContentView(R.layout.main_test);
         this.setContentView(R.layout.activity_main);
+        IsCallInfoHelp.deleteALl();
         View data = findViewById(R.id.data);
         data.setOnClickListener(new OnClickListener() {
             @Override
@@ -193,9 +188,9 @@ public class MainActivity extends Activity implements OnClickListener {
         // TODO Auto-generated method stub
         switch (paramView.getId()) {
             case R.id.main_face_down:
-               // HttpUtils.QueryAddressTask queryAddressTask = new HttpUtils.QueryAddressTask(true, MainActivity.this, null);
-               // queryAddressTask.execute();
-                Executors.newSingleThreadExecutor().execute(new Runnable() {
+               HttpUtils.QueryAddressTask queryAddressTask = new HttpUtils.QueryAddressTask(true, MainActivity.this, null);
+               queryAddressTask.execute();
+                /*Executors.newSingleThreadExecutor().execute(new Runnable() {
                     @Override
                     public void run() {
                         final long activeCode = livenessEngine.activeEngine(MainActivity.this,FaceDB.live_appid,
@@ -213,7 +208,7 @@ public class MainActivity extends Activity implements OnClickListener {
                             }
                         });
                     }
-                });
+                });*/
                 break;
             case R.id.featuredata:
                /* HttpUtils.QueryAddressTask queryAddressTask = new HttpUtils.QueryAddressTask(false, MainActivity.this, file);

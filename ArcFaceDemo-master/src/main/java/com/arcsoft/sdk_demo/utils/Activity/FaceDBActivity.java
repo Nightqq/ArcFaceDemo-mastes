@@ -14,6 +14,9 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.arcsoft.sdk_demo.R;
+import com.arcsoft.sdk_demo.utils.bean.PrisonerInfo;
+import com.arcsoft.sdk_demo.utils.helper.IsCallInfoHelp;
+import com.arcsoft.sdk_demo.utils.helper.PrisonerInfoHelp;
 import com.guo.android_extend.widget.ExtImageView;
 import com.guo.android_extend.widget.HListView;
 
@@ -32,7 +35,7 @@ public class FaceDBActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_facedb);
         mRegisterViewAdapter = new RegisterViewAdapter(this);
-        mListView = (HListView)findViewById(R.id.hlistView1);
+        mListView = (HListView) findViewById(R.id.hlistView1);
         mListView.setAdapter(mRegisterViewAdapter);
         mListView.setOnItemClickListener(mRegisterViewAdapter);
     }
@@ -42,7 +45,7 @@ public class FaceDBActivity extends Activity {
         TextView tv;
     }
 
-    class RegisterViewAdapter extends BaseAdapter implements AdapterView.OnItemClickListener{
+    class RegisterViewAdapter extends BaseAdapter implements AdapterView.OnItemClickListener {
         Context mContext;
         LayoutInflater mLInflater;
 
@@ -55,7 +58,7 @@ public class FaceDBActivity extends Activity {
         @Override
         public int getCount() {
             // TODO Auto-generated method stub
-            return ((Application)mContext.getApplicationContext()).mFaceDB.mRegister.size();
+            return ((Application) mContext.getApplicationContext()).mFaceDB.mRegister.size();
         }
 
         @Override
@@ -84,7 +87,7 @@ public class FaceDBActivity extends Activity {
                 convertView.setTag(holder);
             }
 
-            if (!((Application)mContext.getApplicationContext()).mFaceDB.mRegister.isEmpty()) {
+            if (!((Application) mContext.getApplicationContext()).mFaceDB.mRegister.isEmpty()) {
                 FaceDB.FaceRegist face = ((Application) mContext.getApplicationContext()).mFaceDB.mRegister.get(position);
                 holder.tv.setText(face.mName);
                 //Log.i("每个名字的人脸个数：",""+face.mFaceList.size());
@@ -99,8 +102,8 @@ public class FaceDBActivity extends Activity {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
             Log.d("onItemClick", "onItemClick = " + position + "pos=" + mListView.getScroll());
-            final String name = ((Application)mContext.getApplicationContext()).mFaceDB.mRegister.get(position).mName;
-            final int count = ((Application)mContext.getApplicationContext()).mFaceDB.mRegister.get(position).mFaceList.size();
+            final String name = ((Application) mContext.getApplicationContext()).mFaceDB.mRegister.get(position).mName;
+            final int count = ((Application) mContext.getApplicationContext()).mFaceDB.mRegister.get(position).mFaceList.size();
             new AlertDialog.Builder(FaceDBActivity.this)
                     .setTitle("删除注册名:" + name)
                     .setMessage("包含:" + count + "个注册人脸特征信息")
@@ -108,7 +111,9 @@ public class FaceDBActivity extends Activity {
                     .setPositiveButton("确定", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            ((Application)mContext.getApplicationContext()).mFaceDB.delete(name);
+                            ((Application) mContext.getApplicationContext()).mFaceDB.delete(name);
+                            PrisonerInfoHelp.deleteByName(name);
+                            IsCallInfoHelp.deleteByName(name);
                             mRegisterViewAdapter.notifyDataSetChanged();
                             dialog.dismiss();
                         }

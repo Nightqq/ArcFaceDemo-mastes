@@ -19,6 +19,7 @@ public class Application extends android.app.Application {
 	public static FaceDB mFaceDB;
 	private static Context context;
 	Uri mImage;
+	public static String REname="";
 
 	@Override
 	public void onCreate() {

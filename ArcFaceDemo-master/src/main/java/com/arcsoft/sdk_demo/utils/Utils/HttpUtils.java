@@ -136,8 +136,13 @@ public class HttpUtils {
                 String s = bitmapToBase64(file);
                 upBean.setFaceimage(s);
                 i++;
+                PrisonerInfo getprisoner = PrisonerInfoHelp.getprisoner(Application.REname);
                 //request.addProperty("jsonInfo","{\"empid\":\"6685D2\",\"empname\":\"田\",\"emphao\":\"91499994\",\"faceimage\":\""+s+"\"}");
-                request.addProperty("jsonInfo", "{\"crime_id\":\""+668602+i+"\",\"crime_name\":\""+"张三"+i+"\",\"crime_xb\":\"男\",\"crime_sfrq\":\"2017-09-12\",\"crime_jianqu\":\"十二监区\",\"crime_cjyy\":\"刑满释放\",\"faceimage\":\"" + s + "\"}");
+                if (getprisoner!=null){
+                    request.addProperty("jsonInfo", "{\"crime_id\":\""+getprisoner.getCrime_id()+"\",\"crime_name\":\""+getprisoner.getCrime_name()+"\",\"crime_xb\":\""+getprisoner.getCrime_xb()+"\",\"crime_sfrq\":\"2017-09-12\",\"crime_jianqu\":\""+getprisoner.getCrime_jianqu()+"\",\"crime_cjyy\":\"刑满释放\",\"faceimage\":\"" + s + "\"}");
+                }else {
+                    Log.v("没有人",Application.REname);
+                }
             }
         }
         //创建SoapSerializationEnvelope 对象，同时指定soap版本号(之前在wsdl中看到的)
@@ -212,23 +217,25 @@ public class HttpUtils {
 
         private void saveDB(FaceFeatureData f) {
             //存储数据到本地
-            PrisonerInfo prisonerInfo = new PrisonerInfo();
-            prisonerInfo.setId(new Long(f.getCrime_id()));
-            prisonerInfo.setCrime_id(f.getCrime_id());
-            prisonerInfo.setCrime_jianqu(f.getCrime_jianqu());
-            prisonerInfo.setCrime_name(f.getCrime_name());
-            prisonerInfo.setCrime_xb(f.getCrime_xb());
-            prisonerInfo.setCrime_featuredata("见人脸库");
-            PrisonerInfoHelp.savePrisonerInfoToDB(prisonerInfo);
-            //存储特征值到人脸库
-            byte[] bytes = base64String2ByteFun(f.getCrime_featuredata());
-            featuredata = f.getCrime_featuredata();
-            Log.i("1111返回的bytes", bytes.length + "");
-            AFR_FSDKFace afr_fsdkFace = new AFR_FSDKFace();
-            afr_fsdkFace.setFeatureData(bytes);
-            mFaceDB.addFace(f.getCrime_name(), afr_fsdkFace);
-
-
+            if (f!=null&&f.getCrime_id()!=null&&!f.getCrime_id().equals("")){
+                PrisonerInfo prisonerInfo = new PrisonerInfo();
+                prisonerInfo.setId(new Long(f.getCrime_id()));
+                prisonerInfo.setCrime_id(f.getCrime_id());
+                prisonerInfo.setCrime_jianqu(f.getCrime_jianqu());
+                prisonerInfo.setCrime_name(f.getCrime_name());
+                prisonerInfo.setCrime_xb(f.getCrime_xb());
+                prisonerInfo.setCrime_featuredata("见人脸库");
+                PrisonerInfoHelp.savePrisonerInfoToDB(prisonerInfo);
+                //存储特征值到人脸库
+                byte[] bytes = base64String2ByteFun(f.getCrime_featuredata());
+                featuredata = f.getCrime_featuredata();
+                Log.i("1111返回的bytes", bytes.length + "");
+                AFR_FSDKFace afr_fsdkFace = new AFR_FSDKFace();
+                afr_fsdkFace.setFeatureData(bytes);
+                mFaceDB.addFace(f.getCrime_name(), afr_fsdkFace);
+            }else {
+                Log.v("下载数据异常","");
+            }
         }
     }
 

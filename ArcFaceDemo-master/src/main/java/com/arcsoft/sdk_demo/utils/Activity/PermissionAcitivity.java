@@ -106,5 +106,5 @@ public class PermissionAcitivity extends Activity {
 				}
 			}, 3000);
 		}
-	}
+	}  
 }
